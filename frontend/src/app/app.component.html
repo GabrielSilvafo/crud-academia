@@ -1,6 +1,10 @@
 <header class="app-header">
   <span class="app-header__brand">CRUD Usuários</span>
   <span class="app-header__badge">Angular + Node.js + Supabase</span>
+  <nav class="app-nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Usuários</a>
+    <a routerLink="/matriculas" routerLinkActive="active">Matrículas</a>
+  </nav>
 </header>
 <div class="page">
   <router-outlet></router-outlet>
