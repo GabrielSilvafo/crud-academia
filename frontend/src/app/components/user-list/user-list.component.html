@@ -1,0 +1,43 @@
+<div class="page-header">
+  <h1>Usuários</h1>
+  <a routerLink="/novo" class="btn btn-primary">+ Novo usuário</a>
+</div>
+
+<div class="search">
+  <input
+    type="text"
+    [(ngModel)]="searchName"
+    (input)="load()"
+    placeholder="Buscar por nome"
+  />
+</div>
+
+<ng-container *ngIf="users.length; else empty">
+  <table>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let user of users">
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td>
+        <span class="badge" [class.badge-on]="user.status" [class.badge-off]="!user.status">
+          {{ user.status ? 'Ativo' : 'Inativo' }}
+        </span>
+      </td>
+      <td>
+        <div class="row-actions">
+          <a [routerLink]="['/editar', user.id]" class="btn btn-secondary">Editar</a>
+          <button (click)="remove(user.id!)" class="btn btn-danger">Excluir</button>
+        </div>
+      </td>
+    </tr>
+  </table>
+</ng-container>
+
+<ng-template #empty>
+  <div class="card empty-state">Nenhum usuário encontrado.</div>
+</ng-template>
