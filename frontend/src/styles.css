@@ -403,3 +403,8 @@ input[type="date"]:focus {
 td small {
   color: var(--muted);
 }
+
+.app-header {
+  flex-wrap: wrap;
+  row-gap: 10px;
+}

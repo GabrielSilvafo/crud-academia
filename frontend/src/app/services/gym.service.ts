@@ -1,7 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Plan, Membership, Payment, PayResult, Measurement, GymSummary } from '../models/gym.model';
+import { Plan, Membership, PayResult, Measurement } from '../models/gym.model';
+
+export interface PlanInput {
+  name: string;
+  price: number;
+  duration_months: number;
+  description: string | null;
+  active: boolean;
+}
+
+export interface Exercise {
+  id: number;
+  user_id: number;
+  workout: string;
+  name: string;
+  sets: number | null;
+  reps: string | null;
+  notes: string | null;
+}
 
 @Injectable({ providedIn: 'root' })
 export class GymService {
@@ -16,7 +34,15 @@ export class GymService {
     return this.http.get<Plan[]>(`${this.api}/plans`, { params });
   }
 
-  // matrículas
+  updatePlan(id: number, body: PlanInput): Observable<Plan> {
+    return this.http.put<Plan>(`${this.api}/plans/${id}`, body);
+  }
+
+  deletePlan(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/plans/${id}`);
+  }
+
+  // matrículas e pagamentos
   listMemberships(situation = ''): Observable<Membership[]> {
     let params = new HttpParams();
     if (situation) params = params.set('situation', situation);
@@ -29,11 +55,6 @@ export class GymService {
 
   cancelMembership(id: number): Observable<Membership> {
     return this.http.post<Membership>(`${this.api}/memberships/${id}/cancel`, {});
-  }
-
-  // pagamentos
-  listPayments(membershipId: number): Observable<Payment[]> {
-    return this.http.get<Payment[]>(`${this.api}/memberships/${membershipId}/payments`);
   }
 
   pay(membershipId: number, method: string): Observable<PayResult> {
@@ -56,8 +77,19 @@ export class GymService {
     return this.http.delete<void>(`${this.api}/measurements/${id}`);
   }
 
-  // resumo
-  summary(): Observable<GymSummary> {
-    return this.http.get<GymSummary>(`${this.api}/gym/summary`);
+  // exercícios
+  listExercises(userId: number): Observable<Exercise[]> {
+    return this.http.get<Exercise[]>(`${this.api}/users/${userId}/exercises`);
+  }
+
+  addExercise(
+    userId: number,
+    body: { workout?: string; name: string; sets?: number; reps?: string; notes?: string }
+  ): Observable<Exercise> {
+    return this.http.post<Exercise>(`${this.api}/users/${userId}/exercises`, body);
+  }
+
+  deleteExercise(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.api}/exercises/${id}`);
   }
 }
